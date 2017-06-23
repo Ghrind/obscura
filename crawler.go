@@ -4,6 +4,7 @@ import "fmt"
 import "os"
 import "math/rand"
 import "time"
+import "github.com/fatih/color"
 
 func initMod() mod {
   mod := mod{}
@@ -13,7 +14,7 @@ func initMod() mod {
 }
 
 func main() {
-  fmt.Printf("Welcome to Crawler!\n")
+  color.Green("Welcome to Crawler!\n")
 
   mod := initMod()
 
