@@ -34,7 +34,7 @@ func showClassesMenu(classes []string) {
   }
 }
 
-func showPlayerMenu(avatar avatar) avatar {
+func showPlayerMenu(avatar avatar, classes []string) avatar {
   showMenu()
 
   scanner := bufio.NewScanner(os.Stdin)
@@ -56,7 +56,6 @@ func showPlayerMenu(avatar avatar) avatar {
       break
     case "c":
       // Change the class
-      classes := []string{"warrior", "hunter"}
       showClassesMenu(classes)
       scanner.Scan()
       choice, err := strconv.Atoi(scanner.Text())

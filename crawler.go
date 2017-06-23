@@ -5,8 +5,17 @@ import "os"
 import "math/rand"
 import "time"
 
+func initMod() mod {
+  mod := mod{}
+  mod.AvailableClasses = []string{"warrior", "hunter"}
+
+  return mod
+}
+
 func main() {
   fmt.Printf("Welcome to Crawler!\n")
+
+  mod := initMod()
 
   rand.Seed( time.Now().UTC().UnixNano())
 
@@ -26,10 +35,9 @@ func main() {
   fmt.Printf("Here's your avatar:\n")
   showAvatar(player1)
 
-  player1 = showPlayerMenu(player1)
+  player1 = showPlayerMenu(player1, mod.AvailableClasses)
 
   save(player1)
 
   os.Exit(0)
-
 }
