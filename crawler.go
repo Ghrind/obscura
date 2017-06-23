@@ -2,8 +2,6 @@ package main
 
 import "fmt"
 import "os"
-import "math/rand"
-import "time"
 import "github.com/fatih/color"
 
 func initMod() mod {
@@ -18,7 +16,7 @@ func main() {
 
   mod := initMod()
 
-  rand.Seed( time.Now().UTC().UnixNano())
+  initRandomSeed()
 
   player1, err := load()
 
@@ -39,6 +37,11 @@ func main() {
   player1 = showPlayerMenu(player1, mod.AvailableClasses)
 
   save(player1)
+
+  ennemy1 := combatAvatar{name: "Weakling", hp: 4, ac: 11, tohit: 0, damageRange: 4, damageBonus: 0}
+  player1Combat := combatAvatarFromAvatar(player1)
+
+  showMeleeMenu(player1Combat, ennemy1)
 
   os.Exit(0)
 }

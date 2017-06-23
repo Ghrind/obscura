@@ -1,7 +1,5 @@
 package main
 
-import "math/rand"
-
 type avatar struct {
   Name string
   Class string
@@ -13,13 +11,42 @@ type avatar struct {
   Cha int
 }
 
+type combatAvatar struct {
+  name string
+  hp int
+  ac int
+  damageRange int
+  damageBonus int
+  tohit int
+}
+
 func rollAvatar(avatar avatar) avatar {
-  avatar.Str = rand.Intn(6) + rand.Intn(6) + 6 + 2
-  avatar.Dex = rand.Intn(6) + rand.Intn(6) + 6 + 2
-  avatar.Con = rand.Intn(6) + rand.Intn(6) + 6 + 2
-  avatar.Int = rand.Intn(6) + rand.Intn(6) + 6 + 2
-  avatar.Wis = rand.Intn(6) + rand.Intn(6) + 6 + 2
-  avatar.Cha = rand.Intn(6) + rand.Intn(6) + 6 + 2
+  avatar.Str = rollD6() + rollD6() + 6
+  avatar.Dex = rollD6() + rollD6() + 6
+  avatar.Con = rollD6() + rollD6() + 6
+  avatar.Int = rollD6() + rollD6() + 6
+  avatar.Wis = rollD6() + rollD6() + 6
+  avatar.Cha = rollD6() + rollD6() + 6
 
   return avatar
+}
+
+func modFromStat(stat int) int {
+  result := (stat - 10)
+  if result % 2 != 0 {
+    result = result - 1
+  }
+  return result / 2
+}
+
+func combatAvatarFromAvatar(avatar avatar) combatAvatar {
+  combatAvatar := combatAvatar{}
+  combatAvatar.name = avatar.Name
+  combatAvatar.ac = modFromStat(avatar.Dex) + 10
+  combatAvatar.damageRange = 6
+  combatAvatar.damageBonus = modFromStat(avatar.Str)
+  combatAvatar.hp = 8 + modFromStat(avatar.Con)
+  combatAvatar.tohit = modFromStat(avatar.Str) + 1
+
+  return combatAvatar
 }
