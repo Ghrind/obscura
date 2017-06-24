@@ -20,15 +20,13 @@ type combatAvatar struct {
   tohit int
 }
 
-func rollAvatar(avatar avatar) avatar {
+func rollAvatar(avatar *avatar) {
   avatar.Str = rollD6() + rollD6() + 6
   avatar.Dex = rollD6() + rollD6() + 6
   avatar.Con = rollD6() + rollD6() + 6
   avatar.Int = rollD6() + rollD6() + 6
   avatar.Wis = rollD6() + rollD6() + 6
   avatar.Cha = rollD6() + rollD6() + 6
-
-  return avatar
 }
 
 func modFromStat(stat int) int {
