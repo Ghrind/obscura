@@ -27,7 +27,7 @@ func main() {
     rollAvatar(&player1)
   }
 
-  showAvatarEditScreen(&player1)
+  showEditAvatarScreen(&player1)
 
   save(player1)
 

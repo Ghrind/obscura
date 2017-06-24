@@ -7,6 +7,8 @@
 //
 // * 'show', not 'display'
 // * Use 'ask' when getting an input from the user
+// * Suffix with 'Screen' when showing a whole new screen
+// * Use rest-list syntax when possible (NewResource, EditResource)
 //
 package main
 
@@ -29,7 +31,7 @@ func quitUI() {
   color.Green("Thanks for playing Crawler!")
 }
 
-func showAvatarEditScreen(avatar *avatar) {
+func showEditAvatarScreen(avatar *avatar) {
   termbox.Clear(termbox.ColorDefault, termbox.ColorDefault)
 
   tbprint(0, 0, termbox.ColorDefault, termbox.ColorDefault, fmt.Sprintf("%s (%s)", avatar.Name, avatar.Class))
@@ -50,7 +52,7 @@ func showAvatarEditScreen(avatar *avatar) {
   case "r":
     // Reroll
     rollAvatar(avatar)
-    showAvatarEditScreen(avatar)
+    showEditAvatarScreen(avatar)
   case "n":
     // Name the character
     title := fmt.Sprintf("Give a name to this character (current is '%s')", avatar.Name)
@@ -58,12 +60,12 @@ func showAvatarEditScreen(avatar *avatar) {
     if newName != "" {
       avatar.Name = newName
     }
-    showAvatarEditScreen(avatar)
+    showEditAvatarScreen(avatar)
   case "c":
     // Change the class
     classes := mod.AvailableClasses
     avatar.Class = askFromList(0, 11, fmt.Sprintf("Choose a class for your character (current is '%s'):", avatar.Class), classes)
-    showAvatarEditScreen(avatar)
+    showEditAvatarScreen(avatar)
 
   // "q" and "" (Esc) returns
   }
