@@ -11,7 +11,7 @@ func main() {
   initMod()
   initRandomSeed()
 
-  initUI()
+  initUI(new(termboxImpl))
   defer quitUI()
 
   player1, err := load()

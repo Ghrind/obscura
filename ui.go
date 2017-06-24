@@ -14,35 +14,31 @@ package main
 
 import "strconv"
 import "fmt"
-import "github.com/nsf/termbox-go"
-import "github.com/fatih/color" // Could be easily replaced by control chars
 
-func initUI() {
-  err := termbox.Init()
-  if err != nil {
-    panic(err)
-  }
+var currentTerminal Terminal
 
-  termbox.SetInputMode(termbox.InputEsc)
+func initUI(terminal Terminal) {
+  currentTerminal = terminal
+  currentTerminal.Init()
 }
 
 func quitUI() {
-  termbox.Close()
-  color.Green("Thanks for playing Crawler!")
+  currentTerminal.Close()
+  currentTerminal.ExitMessage("Thanks for playing Crawler!")
 }
 
 func showEditAvatarScreen(avatar *avatar) {
-  termbox.Clear(termbox.ColorDefault, termbox.ColorDefault)
+  currentTerminal.Clear()
 
-  tbprint(0, 0, termbox.ColorDefault, termbox.ColorDefault, fmt.Sprintf("%s (%s)", avatar.Name, avatar.Class))
-  tbprint(0, 2, termbox.ColorDefault, termbox.ColorDefault, fmt.Sprintf("STR: %d", avatar.Str))
-  tbprint(0, 3, termbox.ColorDefault, termbox.ColorDefault, fmt.Sprintf("DEX: %d", avatar.Dex))
-  tbprint(0, 4, termbox.ColorDefault, termbox.ColorDefault, fmt.Sprintf("CON: %d", avatar.Con))
-  tbprint(0, 5, termbox.ColorDefault, termbox.ColorDefault, fmt.Sprintf("INT: %d", avatar.Int))
-  tbprint(0, 6, termbox.ColorDefault, termbox.ColorDefault, fmt.Sprintf("WIS: %d", avatar.Wis))
-  tbprint(0, 7, termbox.ColorDefault, termbox.ColorDefault, fmt.Sprintf("CHA: %d", avatar.Cha))
+  currentTerminal.TextAt(0, 0, fmt.Sprintf("%s (%s)", avatar.Name, avatar.Class))
+  currentTerminal.TextAt(0, 2, fmt.Sprintf("STR: %d", avatar.Str))
+  currentTerminal.TextAt(0, 3, fmt.Sprintf("DEX: %d", avatar.Dex))
+  currentTerminal.TextAt(0, 4, fmt.Sprintf("CON: %d", avatar.Con))
+  currentTerminal.TextAt(0, 5, fmt.Sprintf("INT: %d", avatar.Int))
+  currentTerminal.TextAt(0, 6, fmt.Sprintf("WIS: %d", avatar.Wis))
+  currentTerminal.TextAt(0, 7, fmt.Sprintf("CHA: %d", avatar.Cha))
 
-  termbox.Flush()
+  currentTerminal.Flush()
 
   title := "(r)eroll, (n)ame the character, change the (c)lass of your character, (q)uit?"
 
@@ -72,15 +68,14 @@ func showEditAvatarScreen(avatar *avatar) {
 }
 
 func askAction(x int, y int, prompt string, availableActions []string) string {
-  tbprint(x, y, termbox.ColorDefault, termbox.ColorDefault, prompt)
-  termbox.Flush()
+  currentTerminal.TextAt(x, y, prompt)
+  currentTerminal.Flush()
 
   for {
-    ev := termbox.PollEvent()
-    if ev.Key == termbox.KeyEsc {
+    input, err := currentTerminal.WaitKeyPress()
+    if err != nil {
       return ""
     }
-    input := string(ev.Ch)
     for i := 0; i < len(availableActions); i++ {
       if availableActions[i] == input {
         return input
@@ -92,37 +87,36 @@ func askAction(x int, y int, prompt string, availableActions []string) string {
 }
 
 func askString(x int, y int, title string, prompt string, defaultString string) string {
-  tbprint(x, y, termbox.ColorDefault, termbox.ColorDefault, title)
-  tbprint(x, y + 2, termbox.ColorDefault, termbox.ColorDefault, prompt)
+  currentTerminal.TextAt(x, y, title)
+  currentTerminal.TextAt(x, y + 2, prompt)
 
-  termbox.Flush()
+  currentTerminal.Flush()
 
   input := string(ShowEditBox(len(prompt) + 2, y + 2, 15, []byte(defaultString)))
-
-  termbox.HideCursor()
 
   return input
 }
 
 func askFromList(x int, y int, title string, list []string) string {
-  tbprint(x, y, termbox.ColorDefault, termbox.ColorDefault, title)
+  currentTerminal.TextAt(x, y, title)
 
   for i:=0; i < len(list); i++ {
-    tbprint(x, y + 2 + i, termbox.ColorDefault, termbox.ColorDefault, fmt.Sprintf("%d: %s", i, list[i]))
+    currentTerminal.TextAt(x, y + 2 + i, fmt.Sprintf("%d: %s", i, list[i]))
   }
 
   prompt := fmt.Sprintf("Your choice (0-%d)?", len(list) - 1)
 
-  tbprint(x, y + len(list) + 3, termbox.ColorDefault, termbox.ColorDefault, prompt)
+  currentTerminal.TextAt(x, y + len(list) + 3, prompt)
 
-  termbox.Flush()
+  currentTerminal.Flush()
 
+  loop:
   for {
-    ev := termbox.PollEvent()
-    if ev.Key == termbox.KeyEsc {
-      return ""
+    input, err := currentTerminal.WaitKeyPress()
+    if err != nil {
+      break loop
     }
-    choice, err := strconv.Atoi(string(ev.Ch))
+    choice, err := strconv.Atoi(input)
     if err == nil && choice >= 0 && choice < len(list) {
       return list[choice]
     }
@@ -132,13 +126,13 @@ func askFromList(x int, y int, title string, list []string) string {
 }
 
 func showMeleeScreen(playerAvatar combatAvatar, ennemyAvatar combatAvatar) {
-  termbox.Clear(termbox.ColorDefault, termbox.ColorDefault)
-  tbprint(0, 0, termbox.ColorDefault, termbox.ColorDefault, fmt.Sprintf("Melee: %s vs %s\n", playerAvatar.name, ennemyAvatar.name))
+  currentTerminal.Clear()
+  currentTerminal.TextAt(0, 0, fmt.Sprintf("Melee: %s vs %s\n", playerAvatar.name, ennemyAvatar.name))
 
   showCombatAvatar(0, 2, playerAvatar)
   showCombatAvatar(20, 2, ennemyAvatar)
 
-  termbox.Flush()
+  currentTerminal.Flush()
 
   prompt := "(a)ttack, (r)etreat, (w)ait?"
 
@@ -176,20 +170,20 @@ func showMeleeScreen(playerAvatar combatAvatar, ennemyAvatar combatAvatar) {
 }
 
 func showCombatAvatar(x int, y int, combatAvatar combatAvatar) {
-  tbprint(x, y, termbox.ColorDefault, termbox.ColorDefault, fmt.Sprintf("%s\n", combatAvatar.name))
-  tbprint(x, y + 1, termbox.ColorDefault, termbox.ColorDefault, fmt.Sprintf("HP: %d\n", combatAvatar.hp))
-  tbprint(x, y + 2, termbox.ColorDefault, termbox.ColorDefault, fmt.Sprintf("AC: %d\n", combatAvatar.ac))
-  tbprint(x, y + 3, termbox.ColorDefault, termbox.ColorDefault, fmt.Sprintf("To Hit: %d\n", combatAvatar.tohit))
-  tbprint(x, y + 4, termbox.ColorDefault, termbox.ColorDefault, fmt.Sprintf("Damage: 1D%d+%d\n", combatAvatar.damageRange, combatAvatar.damageBonus))
+  currentTerminal.TextAt(x, y, fmt.Sprintf("%s\n", combatAvatar.name))
+  currentTerminal.TextAt(x, y + 1, fmt.Sprintf("HP: %d\n", combatAvatar.hp))
+  currentTerminal.TextAt(x, y + 2, fmt.Sprintf("AC: %d\n", combatAvatar.ac))
+  currentTerminal.TextAt(x, y + 3, fmt.Sprintf("To Hit: %d\n", combatAvatar.tohit))
+  currentTerminal.TextAt(x, y + 4, fmt.Sprintf("Damage: 1D%d+%d\n", combatAvatar.damageRange, combatAvatar.damageBonus))
 }
 
 func showEndScreen(message string) {
-  termbox.Clear(termbox.ColorDefault, termbox.ColorDefault)
+  currentTerminal.Clear()
 
-  tbprint(0, 0, termbox.ColorDefault, termbox.ColorDefault, message)
-  tbprint(0, 2, termbox.ColorDefault, termbox.ColorDefault, "Press any key to exit")
+  currentTerminal.TextAt(0, 0, message)
+  currentTerminal.TextAt(0, 2, "Press any key to exit")
 
-  termbox.Flush()
+  currentTerminal.Flush()
 
-  _ = termbox.PollEvent()
+  _, _ = currentTerminal.WaitKeyPress()
 }

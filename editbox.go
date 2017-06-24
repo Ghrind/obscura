@@ -228,11 +228,6 @@ func (eb *EditBox) CursorX() int {
 
 func redraw_all(x int, y int, edit_box EditBox, width int) {
   const coldef = termbox.ColorDefault
-  //termbox.Clear(coldef, coldef)
-  //w, h := termbox.Size()
-
-  //midy := h / 2
-  //midx := (w - width) / 2
 
   // unicode box drawing chars around the edit box
   termbox.SetCell(x-1, y, '│', coldef, coldef)
