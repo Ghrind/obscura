@@ -144,7 +144,7 @@ func showMeleeScreen(playerAvatar CombatAvatar, ennemyAvatar CombatAvatar) {
   switch(input) {
   case "a":
     // Attack
-    ennemyAvatar.hp = ennemyAvatar.hp - (rollDice(playerAvatar.damageRange) + playerAvatar.damageBonus)
+    ennemyAvatar.Hp = ennemyAvatar.Hp - (rollDice(playerAvatar.DamageRange) + playerAvatar.DamageBonus)
   case "w":
     // Wait
   case "r":
@@ -156,14 +156,14 @@ func showMeleeScreen(playerAvatar CombatAvatar, ennemyAvatar CombatAvatar) {
     return
   }
 
-  if ennemyAvatar.hp <= 0 {
+  if ennemyAvatar.Hp <= 0 {
     showEndScreen(fmt.Sprintf("%s is slain...", ennemyAvatar.Name))
     return
   } else {
-    playerAvatar.hp = playerAvatar.hp - (rollDice(ennemyAvatar.damageRange) + ennemyAvatar.damageBonus)
+    playerAvatar.Hp = playerAvatar.Hp - (rollDice(ennemyAvatar.DamageRange) + ennemyAvatar.DamageBonus)
   }
 
-  if playerAvatar.hp <= 0 {
+  if playerAvatar.Hp <= 0 {
     showEndScreen(fmt.Sprintf("%s is slain...", playerAvatar.Name))
     return
   }
@@ -174,10 +174,10 @@ func showMeleeScreen(playerAvatar CombatAvatar, ennemyAvatar CombatAvatar) {
 
 func showCombatAvatar(x int, y int, combatAvatar CombatAvatar) {
   currentTerminal.TextAt(x, y, combatAvatar.Name)
-  currentTerminal.TextAt(x, y + 1, fmt.Sprintf("HP: %d", combatAvatar.hp))
-  currentTerminal.TextAt(x, y + 2, fmt.Sprintf("AC: %d", combatAvatar.ac))
-  currentTerminal.TextAt(x, y + 3, fmt.Sprintf("To Hit: %d", combatAvatar.tohit))
-  currentTerminal.TextAt(x, y + 4, fmt.Sprintf("Damage: 1D%d+%d", combatAvatar.damageRange, combatAvatar.damageBonus))
+  currentTerminal.TextAt(x, y + 1, fmt.Sprintf("HP: %d", combatAvatar.Hp))
+  currentTerminal.TextAt(x, y + 2, fmt.Sprintf("AC: %d", combatAvatar.Ac))
+  currentTerminal.TextAt(x, y + 3, fmt.Sprintf("To Hit: %d", combatAvatar.Tohit))
+  currentTerminal.TextAt(x, y + 4, fmt.Sprintf("Damage: 1D%d+%d", combatAvatar.DamageRange, combatAvatar.DamageBonus))
 }
 
 func showEndScreen(message string) {

@@ -28,7 +28,7 @@ func expectOutputEquals(t *testing.T, expectedContent string) {
 
 func TestShowCombatAvatar(t *testing.T) {
   initTestTerminal()
-  combatAvatar := CombatAvatar{Name: "Foobar", ac: 10, hp: 20, tohit: 2, damageRange: 6, damageBonus: 4}
+  combatAvatar := CombatAvatar{Name: "Foobar", Ac: 10, Hp: 20, Tohit: 2, DamageRange: 6, DamageBonus: 4}
   showCombatAvatar(0, 0, combatAvatar)
 
   expectedOutput := "Foobar\n" +

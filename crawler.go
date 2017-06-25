@@ -3,6 +3,7 @@ package main
 var mod Mod
 
 func main() {
+
   InitMod()
   initRandomSeed()
 
@@ -26,7 +27,8 @@ func main() {
 
   save(player1)
 
-  ennemy1 := CombatAvatar{Name: "Weakling", hp: 4, ac: 11, tohit: 0, damageRange: 4, damageBonus: 0}
+  ennemy1 := mod.Monsters[randIndex(len(mod.Monsters))]
+
   player1Combat := combatAvatarFromAvatar(player1)
 
   showMeleeScreen(player1Combat, ennemy1)

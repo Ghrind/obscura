@@ -15,6 +15,14 @@ func rollD20() int {
   return rollDice(20)
 }
 
+func randIndex(sliceLen int) int {
+  if sliceLen == 0 {
+    panic("Cannot call randIndex on an empty slice!")
+  }
+
+  return rand.Intn(sliceLen)
+}
+
 func initRandomSeed() {
   rand.Seed(time.Now().UTC().UnixNano())
 }

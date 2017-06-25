@@ -13,11 +13,11 @@ type avatar struct {
 
 type CombatAvatar struct {
   Name string
-  hp int
-  ac int
-  damageRange int
-  damageBonus int
-  tohit int
+  Hp int
+  Ac int
+  DamageRange int
+  DamageBonus int
+  Tohit int
 }
 
 type AvatarClass struct {
@@ -44,11 +44,11 @@ func modFromStat(stat int) int {
 func combatAvatarFromAvatar(avatar avatar) CombatAvatar {
   combatAvatar := CombatAvatar{}
   combatAvatar.Name = avatar.Name
-  combatAvatar.ac = modFromStat(avatar.Dex) + 10
-  combatAvatar.damageRange = 6
-  combatAvatar.damageBonus = modFromStat(avatar.Str)
-  combatAvatar.hp = 8 + modFromStat(avatar.Con)
-  combatAvatar.tohit = modFromStat(avatar.Str) + 1
+  combatAvatar.Ac = modFromStat(avatar.Dex) + 10
+  combatAvatar.DamageRange = 6
+  combatAvatar.DamageBonus = modFromStat(avatar.Str)
+  combatAvatar.Hp = 8 + modFromStat(avatar.Con)
+  combatAvatar.Tohit = modFromStat(avatar.Str) + 1
 
   return combatAvatar
 }

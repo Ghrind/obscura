@@ -1,4 +1,3 @@
-Name
-Titi
-Toto
-Tutu
+Name,Hp,Ac,Tohit,DamageRange,DamageBonus
+Weakling,4,11,0,4,0
+Brute,8,9,1,6,1
