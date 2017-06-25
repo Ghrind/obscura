@@ -42,7 +42,7 @@ func modFromStat(stat int) int {
   return result / 2
 }
 
-func combatAvatarFromAvatar(avatar Avatar) CombatAvatar {
+func CombatAvatarFromAvatar(avatar Avatar) CombatAvatar {
   combatAvatar := CombatAvatar{}
   combatAvatar.Name = avatar.Name
   combatAvatar.Ac = modFromStat(avatar.Dex) + 10

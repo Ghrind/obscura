@@ -185,7 +185,7 @@ func askFromList(x int, y int, title string, list []string) string {
 func fightScreen(avatar *Avatar) {
   ennemy := mod.Monsters[randIndex(len(mod.Monsters))]
 
-  playerAvatar := combatAvatarFromAvatar(*avatar)
+  playerAvatar := CombatAvatarFromAvatar(*avatar)
   ennemyAvatar := CombatAvatarFromMonster(ennemy)
 
   loop:
