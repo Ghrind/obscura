@@ -217,9 +217,16 @@ func fightScreen(avatar *Avatar) {
     }
 
     if ennemyAvatar.Hp <= 0 {
-      avatar.Items = append(avatar.Items, PickItems(ennemy.LootMoney)...)
+      items := PickItems(ennemy.LootMoney)
+      avatar.Items = append(avatar.Items, items...)
       SavegameInterface.Save(*avatar)
-      showEndScreen(fmt.Sprintf("%s is slain...", ennemyAvatar.Name))
+
+      currentTerminal.TextAt(0, 10, fmt.Sprintf("%s is slain...", ennemyAvatar.Name))
+      currentTerminal.TextAt(0, 12, "The spoils of battle:")
+      displayItemsList(0, 13, items, 20)
+      currentTerminal.Flush()
+
+      _, _ = currentTerminal.WaitKeyPress()
       break loop
     } else {
       playerAvatar.Hp = playerAvatar.Hp - (rollDice(ennemyAvatar.DamageRange) + ennemyAvatar.DamageBonus)
