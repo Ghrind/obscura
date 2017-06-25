@@ -4,7 +4,7 @@ import "fmt"
 import "encoding/json"
 import "io/ioutil"
 
-func save(avatar avatar) {
+func save(avatar Avatar) {
   content, _ := json.Marshal(avatar)
   err := ioutil.WriteFile("/tmp/crawler.json", content, 0644)
   if err != nil {
@@ -12,8 +12,8 @@ func save(avatar avatar) {
   }
 }
 
-func load() (avatar, error) {
-  avatar := avatar{}
+func load() (Avatar, error) {
+  avatar := Avatar{}
   content, err := ioutil.ReadFile("/tmp/crawler.json")
   if err != nil {
     return avatar, err

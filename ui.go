@@ -47,7 +47,7 @@ func displayItemsList(x int, y int, items []Item, limit int) int {
   }
 }
 
-func ShowAvatarScreen(avatar *avatar) {
+func ShowAvatarScreen(avatar *Avatar) {
   loop:
   for {
     currentTerminal.Clear()
@@ -80,7 +80,7 @@ func ShowAvatarScreen(avatar *avatar) {
   }
 }
 
-func editAvatarScreen(avatar *avatar) {
+func editAvatarScreen(avatar *Avatar) {
   loop:
   for {
     currentTerminal.Clear()
@@ -181,7 +181,7 @@ func askFromList(x int, y int, title string, list []string) string {
   return ""
 }
 
-func fightScreen(avatar *avatar) {
+func fightScreen(avatar *Avatar) {
   ennemy := mod.Monsters[randIndex(len(mod.Monsters))]
 
   playerAvatar := combatAvatarFromAvatar(*avatar)

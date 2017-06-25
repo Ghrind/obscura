@@ -1,6 +1,6 @@
 package main
 
-type avatar struct {
+type Avatar struct {
   Name string
   Class string
   Str int
@@ -25,7 +25,7 @@ type AvatarClass struct {
   Name string
 }
 
-func rollAvatar(avatar *avatar) {
+func rollAvatar(avatar *Avatar) {
   avatar.Str = rollD6() + rollD6() + 6
   avatar.Dex = rollD6() + rollD6() + 6
   avatar.Con = rollD6() + rollD6() + 6
@@ -42,7 +42,7 @@ func modFromStat(stat int) int {
   return result / 2
 }
 
-func combatAvatarFromAvatar(avatar avatar) CombatAvatar {
+func combatAvatarFromAvatar(avatar Avatar) CombatAvatar {
   combatAvatar := CombatAvatar{}
   combatAvatar.Name = avatar.Name
   combatAvatar.Ac = modFromStat(avatar.Dex) + 10

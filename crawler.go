@@ -17,7 +17,7 @@ func main() {
   }
 
   if player.Name == "" {
-    player = avatar{}
+    player = Avatar{}
     player.Name = "unknown"
     player.Class = "peon"
     rollAvatar(&player)

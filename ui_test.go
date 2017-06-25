@@ -44,7 +44,7 @@ func TestShowEditAvatarScreen(t *testing.T) {
   initTestTerminal()
   testTerminal.ResetInputSequence([]string{"q"})
 
-  avatar := avatar{Name: "Morgoth", Class: "Stalker", Str: 1, Dex: 2, Con: 3, Cha: 4, Wis: 5, Int: 6}
+  avatar := Avatar{Name: "Morgoth", Class: "Stalker", Str: 1, Dex: 2, Con: 3, Cha: 4, Wis: 5, Int: 6}
 
   editAvatarScreen(&avatar)
 
@@ -65,7 +65,7 @@ func TestChangeAvatarClass(t *testing.T) {
   InitTestMod()
   testTerminal.ResetInputSequence([]string{"c", "0", "q"})
 
-  avatar := avatar{Name: "Morgoth", Class: "Stalker", Str: 1, Dex: 2, Con: 3, Cha: 4, Wis: 5, Int: 6}
+  avatar := Avatar{Name: "Morgoth", Class: "Stalker", Str: 1, Dex: 2, Con: 3, Cha: 4, Wis: 5, Int: 6}
 
   editAvatarScreen(&avatar)
 
