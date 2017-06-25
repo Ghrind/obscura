@@ -1,7 +1,6 @@
 package main
 
 import "testing"
-import "fmt"
 
 func InitTestMod() {
   mod = Mod{}
@@ -10,7 +9,7 @@ func InitTestMod() {
 
 func TestInitMod(t *testing.T) {
   InitMod()
-  for _, monster := range mod.Monsters {
-    fmt.Println(monster.Name)
+  if len(mod.Monsters) == 0 {
+    t.Error("It seems that the mod is not loaded properly")
   }
 }
