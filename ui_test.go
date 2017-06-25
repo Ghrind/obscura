@@ -10,6 +10,10 @@ func initTestTerminal() {
   initUI(testTerminal)
 }
 
+func initTestSavegame() {
+  SavegameInterface = new(TestingSavegame)
+}
+
 func terminalContent() string {
   content := ""
   for _, bytes := range testTerminal.Content {
@@ -26,7 +30,7 @@ func expectOutputEquals(t *testing.T, expectedContent string) {
   }
 }
 
-func TestShowCombatAvatar(t *testing.T) {
+func TestDisplayCombatAvatar(t *testing.T) {
   initTestTerminal()
   combatAvatar := CombatAvatar{Name: "Foobar", Ac: 10, Hp: 20, Tohit: 2, DamageRange: 6, DamageBonus: 4}
   displayCombatAvatar(0, 0, combatAvatar)
@@ -40,7 +44,7 @@ func TestShowCombatAvatar(t *testing.T) {
   expectOutputEquals(t, expectedOutput)
 }
 
-func TestShowEditAvatarScreen(t *testing.T) {
+func TestEditAvatarScreen(t *testing.T) {
   initTestTerminal()
   testTerminal.ResetInputSequence([]string{"q"})
 
@@ -58,6 +62,22 @@ func TestShowEditAvatarScreen(t *testing.T) {
   "(r)eroll, (n)ame the character, change the (c)lass of your character, (q)uit?"
 
   expectOutputEquals(t, expectedOutput)
+}
+
+func TestEditAvatarScreenSavesAvatar(t *testing.T) {
+  initTestTerminal()
+  testTerminal.ResetInputSequence([]string{"c", "0", "q"})
+  initTestSavegame()
+  InitTestMod()
+
+  avatar := Avatar{Class: "foobar"}
+
+  editAvatarScreen(&avatar)
+
+  avatar, _ = SavegameInterface.Load()
+  if avatar.Class != "warrior" {
+    t.Error("The avatar has not been saved properly")
+  }
 }
 
 func TestChangeAvatarClass(t *testing.T) {

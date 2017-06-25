@@ -3,14 +3,14 @@ package main
 var mod Mod
 
 func main() {
-
   InitMod()
   initRandomSeed()
+  InitSavegame(new(TempFileSavegame))
 
   initUI(new(TermboxTerminal))
   defer quitUI()
 
-  player, err := load()
+  player, err := SavegameInterface.Load()
 
   if err != nil {
     showErrorScreen(err)

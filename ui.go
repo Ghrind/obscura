@@ -118,6 +118,7 @@ func editAvatarScreen(avatar *Avatar) {
       avatar.Class = askFromList(0, 11, fmt.Sprintf("Choose a class for your character (current is '%s'):", avatar.Class), classNames)
     default:
       // "q" and "" (Esc) returns
+      SavegameInterface.Save(*avatar)
       break loop
     }
   }
@@ -217,7 +218,7 @@ func fightScreen(avatar *Avatar) {
 
     if ennemyAvatar.Hp <= 0 {
       avatar.Items = append(avatar.Items, PickItems(ennemy.LootMoney)...)
-      save(*avatar)
+      SavegameInterface.Save(*avatar)
       showEndScreen(fmt.Sprintf("%s is slain...", ennemyAvatar.Name))
       break loop
     } else {
