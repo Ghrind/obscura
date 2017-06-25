@@ -5,6 +5,8 @@
 //
 // Naming:
 //
+// * Use 'display' for partials names
+// * Partials don't Flush themselves
 // * Use rest-like syntax when possible (NewResource, EditResource)
 // * Use 'ask' when getting an input from the user
 // * Suffix with 'Screen' when showing a whole new screen
@@ -26,6 +28,25 @@ func quitUI() {
   currentTerminal.ExitMessage("Thanks for playing Crawler!")
 }
 
+// Return the total number of rows used
+func displayItemsList(x int, y int, items []Item, limit int) int {
+  var trueLimit int
+  if limit > len(items) {
+    trueLimit = len(items)
+  } else {
+    trueLimit = limit
+  }
+  for i, item := range items[0:trueLimit] {
+    currentTerminal.TextAt(x, y + i, fmt.Sprintf("- %s (%d)", item.Name, item.Cost))
+  }
+  if len(items) > limit {
+    currentTerminal.TextAt(x, y + limit, "- ...")
+    return limit + 1
+  } else {
+    return len(items)
+  }
+}
+
 func ShowAvatarScreen(avatar *avatar) {
   loop:
   for {
@@ -40,18 +61,16 @@ func ShowAvatarScreen(avatar *avatar) {
     currentTerminal.TextAt(0, 7, fmt.Sprintf("CHA: %d", avatar.Cha))
 
     currentTerminal.TextAt(0, 9, fmt.Sprintf("Loot (%d):", len(avatar.Items)))
-    for i, item := range avatar.Items {
-      currentTerminal.TextAt(0, 10 + i, fmt.Sprintf("- %s (%d)", item.Name, item.Cost))
-    }
+    offset := displayItemsList(0, 10, avatar.Items, 10)
 
     currentTerminal.Flush()
 
     title := "(e)edit, (f)ight, (q)uit?"
-    input := askAction(0, 10 + len(avatar.Items) + 1, title, []string{"e", "f", "q"})
+    input := askAction(0, 10 + offset + 1, title, []string{"e", "f", "q"})
 
     switch input {
     case "e":
-      EditAvatarScreen(avatar)
+      editAvatarScreen(avatar)
     case "f":
       fightScreen(avatar)
     default:
@@ -61,7 +80,7 @@ func ShowAvatarScreen(avatar *avatar) {
   }
 }
 
-func EditAvatarScreen(avatar *avatar) {
+func editAvatarScreen(avatar *avatar) {
   loop:
   for {
     currentTerminal.Clear()
@@ -173,8 +192,8 @@ func fightScreen(avatar *avatar) {
     currentTerminal.Clear()
     currentTerminal.TextAt(0, 0, fmt.Sprintf("Melee: %s vs %s\n", playerAvatar.Name, ennemyAvatar.Name))
 
-    showCombatAvatar(0, 2, playerAvatar)
-    showCombatAvatar(20, 2, ennemyAvatar)
+    displayCombatAvatar(0, 2, playerAvatar)
+    displayCombatAvatar(20, 2, ennemyAvatar)
 
     currentTerminal.Flush()
 
@@ -212,7 +231,7 @@ func fightScreen(avatar *avatar) {
   }
 }
 
-func showCombatAvatar(x int, y int, combatAvatar CombatAvatar) {
+func displayCombatAvatar(x int, y int, combatAvatar CombatAvatar) {
   currentTerminal.TextAt(x, y, combatAvatar.Name)
   currentTerminal.TextAt(x, y + 1, fmt.Sprintf("HP: %d", combatAvatar.Hp))
   currentTerminal.TextAt(x, y + 2, fmt.Sprintf("AC: %d", combatAvatar.Ac))

@@ -95,8 +95,14 @@ func (tt TestTerminal) ExitMessage(message string) {
 }
 
 func (tt *TestTerminal) TextAt(x int, y int, text string) {
+  padding := ""
+  for i := 0; i < x; i++ {
+    padding += " "
+  }
+  text = padding + text
+
+  // Add new rows if needed
   if len(tt.Content) <= y {
-    // Add new rows
     t := make([][]byte, y+1, (y + 1)*2)
     copy(t, tt.Content)
     tt.Content = t

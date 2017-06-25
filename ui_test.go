@@ -29,7 +29,7 @@ func expectOutputEquals(t *testing.T, expectedContent string) {
 func TestShowCombatAvatar(t *testing.T) {
   initTestTerminal()
   combatAvatar := CombatAvatar{Name: "Foobar", Ac: 10, Hp: 20, Tohit: 2, DamageRange: 6, DamageBonus: 4}
-  showCombatAvatar(0, 0, combatAvatar)
+  displayCombatAvatar(0, 0, combatAvatar)
 
   expectedOutput := "Foobar\n" +
   "HP: 20\n" +
@@ -46,7 +46,7 @@ func TestShowEditAvatarScreen(t *testing.T) {
 
   avatar := avatar{Name: "Morgoth", Class: "Stalker", Str: 1, Dex: 2, Con: 3, Cha: 4, Wis: 5, Int: 6}
 
-  showEditAvatarScreen(&avatar)
+  editAvatarScreen(&avatar)
 
   expectedOutput := "Morgoth (Stalker)\n\n" +
   "STR: 1\n" +
@@ -67,7 +67,7 @@ func TestChangeAvatarClass(t *testing.T) {
 
   avatar := avatar{Name: "Morgoth", Class: "Stalker", Str: 1, Dex: 2, Con: 3, Cha: 4, Wis: 5, Int: 6}
 
-  showEditAvatarScreen(&avatar)
+  editAvatarScreen(&avatar)
 
   expectedOutput := "Morgoth (warrior)\n\n" +
   "STR: 1\n" +
@@ -77,6 +77,41 @@ func TestChangeAvatarClass(t *testing.T) {
   "WIS: 5\n" +
   "CHA: 4\n\n" +
   "(r)eroll, (n)ame the character, change the (c)lass of your character, (q)uit?"
+
+  expectOutputEquals(t, expectedOutput)
+}
+
+func TestDisplayItemsListWithNoLimit(t *testing.T) {
+  initTestTerminal()
+  items := []Item{{Name: "Foo", Cost: 1}, {Name: "Bar", Cost: 2}, {Name: "Baz", Cost: 3}}
+
+  expectedOffset := 3
+  offset := displayItemsList(1, 2, items, 100)
+  if offset != expectedOffset {
+    t.Error(fmt.Sprintf("Expected an offset of %d, got %d", expectedOffset, offset))
+  }
+
+  expectedOutput := "\n\n" +
+    " - Foo (1)\n" +
+    " - Bar (2)\n" +
+    " - Baz (3)"
+
+  expectOutputEquals(t, expectedOutput)
+}
+
+func TestDisplayItemsListWithLimit(t *testing.T) {
+  initTestTerminal()
+  items := []Item{{Name: "Foo", Cost: 1}, {Name: "Bar", Cost: 2}, {Name: "Baz", Cost: 3}}
+
+  expectedOffset := 2
+  offset := displayItemsList(1, 2, items, 1)
+  if offset != expectedOffset {
+    t.Error(fmt.Sprintf("Expected an offset of %d, got %d", expectedOffset, offset))
+  }
+
+  expectedOutput := "\n\n" +
+    " - Foo (1)\n" +
+    " - ..."
 
   expectOutputEquals(t, expectedOutput)
 }
