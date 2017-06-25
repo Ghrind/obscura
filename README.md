@@ -1,8 +1,8 @@
-# Crawler
+# Obscura
 
 ## Build & Run
 
-    go build && ./crawler
+    go build && ./obscura
 
 ## Resources to lookup to
 

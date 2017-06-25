@@ -19,9 +19,11 @@ func InitSavegame(savegame Savegame) {
 // Temporary file implementation
 type TempFileSavegame struct {}
 
+const tempFileSavegamePath = "/tmp/obscura.json"
+
 func (tf TempFileSavegame) Save(avatar Avatar) {
   content, _ := json.Marshal(avatar)
-  err := ioutil.WriteFile("/tmp/crawler.json", content, 0644)
+  err := ioutil.WriteFile(tempFileSavegamePath, content, 0644)
   if err != nil {
     fmt.Println(err)
   }
@@ -29,7 +31,7 @@ func (tf TempFileSavegame) Save(avatar Avatar) {
 
 func (tf TempFileSavegame) Load() (Avatar, error) {
   avatar := Avatar{}
-  content, err := ioutil.ReadFile("/tmp/crawler.json")
+  content, err := ioutil.ReadFile(tempFileSavegamePath)
   if err != nil {
     return avatar, err
   }
