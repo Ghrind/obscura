@@ -170,11 +170,11 @@ func showMeleeScreen(playerAvatar combatAvatar, ennemyAvatar combatAvatar) {
 }
 
 func showCombatAvatar(x int, y int, combatAvatar combatAvatar) {
-  currentTerminal.TextAt(x, y, fmt.Sprintf("%s\n", combatAvatar.name))
-  currentTerminal.TextAt(x, y + 1, fmt.Sprintf("HP: %d\n", combatAvatar.hp))
-  currentTerminal.TextAt(x, y + 2, fmt.Sprintf("AC: %d\n", combatAvatar.ac))
-  currentTerminal.TextAt(x, y + 3, fmt.Sprintf("To Hit: %d\n", combatAvatar.tohit))
-  currentTerminal.TextAt(x, y + 4, fmt.Sprintf("Damage: 1D%d+%d\n", combatAvatar.damageRange, combatAvatar.damageBonus))
+  currentTerminal.TextAt(x, y, combatAvatar.name)
+  currentTerminal.TextAt(x, y + 1, fmt.Sprintf("HP: %d", combatAvatar.hp))
+  currentTerminal.TextAt(x, y + 2, fmt.Sprintf("AC: %d", combatAvatar.ac))
+  currentTerminal.TextAt(x, y + 3, fmt.Sprintf("To Hit: %d", combatAvatar.tohit))
+  currentTerminal.TextAt(x, y + 4, fmt.Sprintf("Damage: 1D%d+%d", combatAvatar.damageRange, combatAvatar.damageBonus))
 }
 
 func showEndScreen(message string) {
@@ -182,6 +182,17 @@ func showEndScreen(message string) {
 
   currentTerminal.TextAt(0, 0, message)
   currentTerminal.TextAt(0, 2, "Press any key to exit")
+
+  currentTerminal.Flush()
+
+  _, _ = currentTerminal.WaitKeyPress()
+}
+
+func showErrorScreen(err error) {
+  currentTerminal.Clear()
+
+  currentTerminal.TextAt(0, 0, fmt.Sprintf("%s", err))
+  currentTerminal.TextAt(0, 2, "Press any key to continue")
 
   currentTerminal.Flush()
 

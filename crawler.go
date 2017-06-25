@@ -11,13 +11,13 @@ func main() {
   initMod()
   initRandomSeed()
 
-  initUI(new(termboxImpl))
+  initUI(new(TermboxTerminal))
   defer quitUI()
 
   player1, err := load()
 
   if err != nil {
-    panic(err)
+    showErrorScreen(err)
   }
 
   if player1.Name == "" {
