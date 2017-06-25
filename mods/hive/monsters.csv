@@ -1,3 +1,4 @@
-Name,Hp,Ac,Tohit,DamageRange,DamageBonus
-Weakling,4,11,0,4,0
-Brute,8,9,1,6,1
+Name,Hp,Ac,Tohit,DamageRange,DamageBonus,LootMoney
+Weakling,4,11,0,4,0,20
+Brute,8,9,1,6,1,30
+Poser,6,10,2,6,0,100

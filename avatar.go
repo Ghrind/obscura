@@ -9,6 +9,7 @@ type avatar struct {
   Int int
   Wis int
   Cha int
+  Items []Item
 }
 
 type CombatAvatar struct {
@@ -49,6 +50,18 @@ func combatAvatarFromAvatar(avatar avatar) CombatAvatar {
   combatAvatar.DamageBonus = modFromStat(avatar.Str)
   combatAvatar.Hp = 8 + modFromStat(avatar.Con)
   combatAvatar.Tohit = modFromStat(avatar.Str) + 1
+
+  return combatAvatar
+}
+
+func CombatAvatarFromMonster(monster Monster) CombatAvatar {
+  combatAvatar := CombatAvatar{}
+  combatAvatar.Name = monster.Name
+  combatAvatar.Ac = monster.Ac
+  combatAvatar.DamageRange = monster.DamageRange
+  combatAvatar.DamageBonus = monster.DamageBonus
+  combatAvatar.Hp = monster.Hp
+  combatAvatar.Tohit = monster.Tohit
 
   return combatAvatar
 }

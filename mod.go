@@ -13,7 +13,8 @@ const ModfileSuffix = ".csv"
 
 type Mod struct {
   AvailableClasses []AvatarClass
-  Monsters []CombatAvatar
+  Monsters []Monster
+  Items []Item
 }
 
 func InitMod() {
@@ -21,6 +22,7 @@ func InitMod() {
 
   loadModFile("classes", &mod.AvailableClasses)
   loadModFile("monsters", &mod.Monsters)
+  loadModFile("items", &mod.Items)
 }
 
 func ModfilePath(filename string) string {

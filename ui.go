@@ -27,6 +27,35 @@ func quitUI() {
   currentTerminal.ExitMessage("Thanks for playing Crawler!")
 }
 
+func showAvatarScreen(avatar *avatar) {
+  currentTerminal.Clear()
+
+  currentTerminal.TextAt(0, 0, fmt.Sprintf("%s (%s)", avatar.Name, avatar.Class))
+  currentTerminal.TextAt(0, 2, fmt.Sprintf("STR: %d", avatar.Str))
+  currentTerminal.TextAt(0, 3, fmt.Sprintf("DEX: %d", avatar.Dex))
+  currentTerminal.TextAt(0, 4, fmt.Sprintf("CON: %d", avatar.Con))
+  currentTerminal.TextAt(0, 5, fmt.Sprintf("INT: %d", avatar.Int))
+  currentTerminal.TextAt(0, 6, fmt.Sprintf("WIS: %d", avatar.Wis))
+  currentTerminal.TextAt(0, 7, fmt.Sprintf("CHA: %d", avatar.Cha))
+
+  currentTerminal.TextAt(0, 9, fmt.Sprintf("Loot (%d):", len(avatar.Items)))
+  for i, item := range avatar.Items {
+    currentTerminal.TextAt(0, 10 + i, fmt.Sprintf("- %s (%d)", item.Name, item.Cost))
+  }
+
+  currentTerminal.Flush()
+
+  title := "(e)edit, (f)ight, (q)uit?"
+
+  input := askAction(0, 10 + len(avatar.Items) + 1, title, []string{"e", "q"})
+
+  switch input {
+  case "e":
+    showEditAvatarScreen(avatar)
+  // "q" and "" (Esc) returns
+  }
+}
+
 func showEditAvatarScreen(avatar *avatar) {
   currentTerminal.Clear()
 
