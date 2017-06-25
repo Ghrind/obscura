@@ -5,10 +5,9 @@
 //
 // Naming:
 //
-// * 'show', not 'display'
+// * Use rest-like syntax when possible (NewResource, EditResource)
 // * Use 'ask' when getting an input from the user
 // * Suffix with 'Screen' when showing a whole new screen
-// * Use rest-list syntax when possible (NewResource, EditResource)
 //
 package main
 
@@ -27,75 +26,81 @@ func quitUI() {
   currentTerminal.ExitMessage("Thanks for playing Crawler!")
 }
 
-func showAvatarScreen(avatar *avatar) {
-  currentTerminal.Clear()
+func ShowAvatarScreen(avatar *avatar) {
+  loop:
+  for {
+    currentTerminal.Clear()
 
-  currentTerminal.TextAt(0, 0, fmt.Sprintf("%s (%s)", avatar.Name, avatar.Class))
-  currentTerminal.TextAt(0, 2, fmt.Sprintf("STR: %d", avatar.Str))
-  currentTerminal.TextAt(0, 3, fmt.Sprintf("DEX: %d", avatar.Dex))
-  currentTerminal.TextAt(0, 4, fmt.Sprintf("CON: %d", avatar.Con))
-  currentTerminal.TextAt(0, 5, fmt.Sprintf("INT: %d", avatar.Int))
-  currentTerminal.TextAt(0, 6, fmt.Sprintf("WIS: %d", avatar.Wis))
-  currentTerminal.TextAt(0, 7, fmt.Sprintf("CHA: %d", avatar.Cha))
+    currentTerminal.TextAt(0, 0, fmt.Sprintf("%s (%s)", avatar.Name, avatar.Class))
+    currentTerminal.TextAt(0, 2, fmt.Sprintf("STR: %d", avatar.Str))
+    currentTerminal.TextAt(0, 3, fmt.Sprintf("DEX: %d", avatar.Dex))
+    currentTerminal.TextAt(0, 4, fmt.Sprintf("CON: %d", avatar.Con))
+    currentTerminal.TextAt(0, 5, fmt.Sprintf("INT: %d", avatar.Int))
+    currentTerminal.TextAt(0, 6, fmt.Sprintf("WIS: %d", avatar.Wis))
+    currentTerminal.TextAt(0, 7, fmt.Sprintf("CHA: %d", avatar.Cha))
 
-  currentTerminal.TextAt(0, 9, fmt.Sprintf("Loot (%d):", len(avatar.Items)))
-  for i, item := range avatar.Items {
-    currentTerminal.TextAt(0, 10 + i, fmt.Sprintf("- %s (%d)", item.Name, item.Cost))
-  }
+    currentTerminal.TextAt(0, 9, fmt.Sprintf("Loot (%d):", len(avatar.Items)))
+    for i, item := range avatar.Items {
+      currentTerminal.TextAt(0, 10 + i, fmt.Sprintf("- %s (%d)", item.Name, item.Cost))
+    }
 
-  currentTerminal.Flush()
+    currentTerminal.Flush()
 
-  title := "(e)edit, (f)ight, (q)uit?"
+    title := "(e)edit, (f)ight, (q)uit?"
+    input := askAction(0, 10 + len(avatar.Items) + 1, title, []string{"e", "f", "q"})
 
-  input := askAction(0, 10 + len(avatar.Items) + 1, title, []string{"e", "q"})
-
-  switch input {
-  case "e":
-    showEditAvatarScreen(avatar)
-  // "q" and "" (Esc) returns
+    switch input {
+    case "e":
+      EditAvatarScreen(avatar)
+    case "f":
+      fightScreen(avatar)
+    default:
+      // "q" and "" (Esc) returns
+      break loop
+    }
   }
 }
 
-func showEditAvatarScreen(avatar *avatar) {
-  currentTerminal.Clear()
+func EditAvatarScreen(avatar *avatar) {
+  loop:
+  for {
+    currentTerminal.Clear()
 
-  currentTerminal.TextAt(0, 0, fmt.Sprintf("%s (%s)", avatar.Name, avatar.Class))
-  currentTerminal.TextAt(0, 2, fmt.Sprintf("STR: %d", avatar.Str))
-  currentTerminal.TextAt(0, 3, fmt.Sprintf("DEX: %d", avatar.Dex))
-  currentTerminal.TextAt(0, 4, fmt.Sprintf("CON: %d", avatar.Con))
-  currentTerminal.TextAt(0, 5, fmt.Sprintf("INT: %d", avatar.Int))
-  currentTerminal.TextAt(0, 6, fmt.Sprintf("WIS: %d", avatar.Wis))
-  currentTerminal.TextAt(0, 7, fmt.Sprintf("CHA: %d", avatar.Cha))
+    currentTerminal.TextAt(0, 0, fmt.Sprintf("%s (%s)", avatar.Name, avatar.Class))
+    currentTerminal.TextAt(0, 2, fmt.Sprintf("STR: %d", avatar.Str))
+    currentTerminal.TextAt(0, 3, fmt.Sprintf("DEX: %d", avatar.Dex))
+    currentTerminal.TextAt(0, 4, fmt.Sprintf("CON: %d", avatar.Con))
+    currentTerminal.TextAt(0, 5, fmt.Sprintf("INT: %d", avatar.Int))
+    currentTerminal.TextAt(0, 6, fmt.Sprintf("WIS: %d", avatar.Wis))
+    currentTerminal.TextAt(0, 7, fmt.Sprintf("CHA: %d", avatar.Cha))
 
-  currentTerminal.Flush()
+    currentTerminal.Flush()
 
-  title := "(r)eroll, (n)ame the character, change the (c)lass of your character, (q)uit?"
+    title := "(r)eroll, (n)ame the character, change the (c)lass of your character, (q)uit?"
+    input := askAction(0, 9, title, []string{"r", "n", "c", "q"})
 
-  input := askAction(0, 9, title, []string{"r", "n", "c", "q"})
-
-  switch input {
-  case "r":
-    // Reroll
-    rollAvatar(avatar)
-    showEditAvatarScreen(avatar)
-  case "n":
-    // Name the character
-    title := fmt.Sprintf("Give a name to this character (current is '%s')", avatar.Name)
-    newName := askString(0, 11, title, "New name?", avatar.Name)
-    if newName != "" {
-      avatar.Name = newName
+    switch input {
+    case "r":
+      // Reroll
+      rollAvatar(avatar)
+    case "n":
+      // Name the character
+      title := fmt.Sprintf("Give a name to this character (current is '%s')", avatar.Name)
+      newName := askString(0, 11, title, "New name?", avatar.Name)
+      if newName != "" {
+        avatar.Name = newName
+      }
+    case "c":
+      // Change the class
+      classNames := make([]string, len(mod.AvailableClasses), len(mod.AvailableClasses))
+      for i, class := range mod.AvailableClasses {
+        classNames[i] = class.Name
+      }
+      avatar.Class = askFromList(0, 11, fmt.Sprintf("Choose a class for your character (current is '%s'):", avatar.Class), classNames)
+    default:
+      // "q" and "" (Esc) returns
+      break loop
     }
-    showEditAvatarScreen(avatar)
-  case "c":
-    // Change the class
-    classNames := make([]string, len(mod.AvailableClasses), len(mod.AvailableClasses))
-    for i, class := range mod.AvailableClasses {
-      classNames[i] = class.Name
-    }
-    avatar.Class = askFromList(0, 11, fmt.Sprintf("Choose a class for your character (current is '%s'):", avatar.Class), classNames)
-    showEditAvatarScreen(avatar)
-
-  // "q" and "" (Esc) returns
   }
 }
 
@@ -157,48 +162,54 @@ func askFromList(x int, y int, title string, list []string) string {
   return ""
 }
 
-func showMeleeScreen(playerAvatar CombatAvatar, ennemyAvatar CombatAvatar) {
-  currentTerminal.Clear()
-  currentTerminal.TextAt(0, 0, fmt.Sprintf("Melee: %s vs %s\n", playerAvatar.Name, ennemyAvatar.Name))
+func fightScreen(avatar *avatar) {
+  ennemy := mod.Monsters[randIndex(len(mod.Monsters))]
 
-  showCombatAvatar(0, 2, playerAvatar)
-  showCombatAvatar(20, 2, ennemyAvatar)
+  playerAvatar := combatAvatarFromAvatar(*avatar)
+  ennemyAvatar := CombatAvatarFromMonster(ennemy)
 
-  currentTerminal.Flush()
+  loop:
+  for {
+    currentTerminal.Clear()
+    currentTerminal.TextAt(0, 0, fmt.Sprintf("Melee: %s vs %s\n", playerAvatar.Name, ennemyAvatar.Name))
 
-  prompt := "(a)ttack, (r)etreat, (w)ait?"
+    showCombatAvatar(0, 2, playerAvatar)
+    showCombatAvatar(20, 2, ennemyAvatar)
 
-  input := askAction(0, 8, prompt, []string{"a", "r", "w"})
+    currentTerminal.Flush()
 
-  switch(input) {
-  case "a":
-    // Attack
-    ennemyAvatar.Hp = ennemyAvatar.Hp - (rollDice(playerAvatar.DamageRange) + playerAvatar.DamageBonus)
-  case "w":
-    // Wait
-  case "r":
-    // Retreat
-    showEndScreen(fmt.Sprintf("%s has retreated safely..."))
-    return
-  case "":
-    // Quit
-    return
+    prompt := "(a)ttack, (r)etreat, (w)ait?"
+    input := askAction(0, 8, prompt, []string{"a", "r", "w"})
+
+    switch(input) {
+    case "a":
+      // Attack
+      ennemyAvatar.Hp = ennemyAvatar.Hp - (rollDice(playerAvatar.DamageRange) + playerAvatar.DamageBonus)
+    case "w":
+      // Wait
+    case "r":
+      // Retreat
+      showEndScreen(fmt.Sprintf("%s has retreated safely..."))
+      return
+    case "":
+      // Quit
+      return
+    }
+
+    if ennemyAvatar.Hp <= 0 {
+      avatar.Items = append(avatar.Items, PickItems(ennemy.LootMoney)...)
+      save(*avatar)
+      showEndScreen(fmt.Sprintf("%s is slain...", ennemyAvatar.Name))
+      break loop
+    } else {
+      playerAvatar.Hp = playerAvatar.Hp - (rollDice(ennemyAvatar.DamageRange) + ennemyAvatar.DamageBonus)
+    }
+
+    if playerAvatar.Hp <= 0 {
+      showEndScreen(fmt.Sprintf("%s is slain...", playerAvatar.Name))
+      break loop
+    }
   }
-
-  if ennemyAvatar.Hp <= 0 {
-    showEndScreen(fmt.Sprintf("%s is slain...", ennemyAvatar.Name))
-    return
-  } else {
-    playerAvatar.Hp = playerAvatar.Hp - (rollDice(ennemyAvatar.DamageRange) + ennemyAvatar.DamageBonus)
-  }
-
-  if playerAvatar.Hp <= 0 {
-    showEndScreen(fmt.Sprintf("%s is slain...", playerAvatar.Name))
-    return
-  }
-
-  showMeleeScreen(playerAvatar, ennemyAvatar)
-
 }
 
 func showCombatAvatar(x int, y int, combatAvatar CombatAvatar) {
