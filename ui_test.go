@@ -28,7 +28,7 @@ func expectOutputEquals(t *testing.T, expectedContent string) {
 
 func TestShowCombatAvatar(t *testing.T) {
   initTestTerminal()
-  combatAvatar := combatAvatar{name: "Foobar", ac: 10, hp: 20, tohit: 2, damageRange: 6, damageBonus: 4}
+  combatAvatar := CombatAvatar{Name: "Foobar", ac: 10, hp: 20, tohit: 2, damageRange: 6, damageBonus: 4}
   showCombatAvatar(0, 0, combatAvatar)
 
   expectedOutput := "Foobar\n" +
@@ -62,7 +62,7 @@ func TestShowEditAvatarScreen(t *testing.T) {
 
 func TestChangeAvatarClass(t *testing.T) {
   initTestTerminal()
-  initMod()
+  InitTestMod()
   testTerminal.ResetInputSequence([]string{"c", "0", "q"})
 
   avatar := avatar{Name: "Morgoth", Class: "Stalker", Str: 1, Dex: 2, Con: 3, Cha: 4, Wis: 5, Int: 6}

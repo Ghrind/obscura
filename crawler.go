@@ -1,14 +1,9 @@
 package main
 
-func initMod() {
-  mod = Mod{}
-  mod.AvailableClasses = []string{"warrior", "hunter", "sorcerer", "assassin"}
-}
-
 var mod Mod
 
 func main() {
-  initMod()
+  InitMod()
   initRandomSeed()
 
   initUI(new(TermboxTerminal))
@@ -31,7 +26,7 @@ func main() {
 
   save(player1)
 
-  ennemy1 := combatAvatar{name: "Weakling", hp: 4, ac: 11, tohit: 0, damageRange: 4, damageBonus: 0}
+  ennemy1 := CombatAvatar{Name: "Weakling", hp: 4, ac: 11, tohit: 0, damageRange: 4, damageBonus: 0}
   player1Combat := combatAvatarFromAvatar(player1)
 
   showMeleeScreen(player1Combat, ennemy1)

@@ -11,13 +11,17 @@ type avatar struct {
   Cha int
 }
 
-type combatAvatar struct {
-  name string
+type CombatAvatar struct {
+  Name string
   hp int
   ac int
   damageRange int
   damageBonus int
   tohit int
+}
+
+type AvatarClass struct {
+  Name string
 }
 
 func rollAvatar(avatar *avatar) {
@@ -37,9 +41,9 @@ func modFromStat(stat int) int {
   return result / 2
 }
 
-func combatAvatarFromAvatar(avatar avatar) combatAvatar {
-  combatAvatar := combatAvatar{}
-  combatAvatar.name = avatar.Name
+func combatAvatarFromAvatar(avatar avatar) CombatAvatar {
+  combatAvatar := CombatAvatar{}
+  combatAvatar.Name = avatar.Name
   combatAvatar.ac = modFromStat(avatar.Dex) + 10
   combatAvatar.damageRange = 6
   combatAvatar.damageBonus = modFromStat(avatar.Str)

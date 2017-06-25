@@ -59,8 +59,11 @@ func showEditAvatarScreen(avatar *avatar) {
     showEditAvatarScreen(avatar)
   case "c":
     // Change the class
-    classes := mod.AvailableClasses
-    avatar.Class = askFromList(0, 11, fmt.Sprintf("Choose a class for your character (current is '%s'):", avatar.Class), classes)
+    classNames := make([]string, len(mod.AvailableClasses), len(mod.AvailableClasses))
+    for i, class := range mod.AvailableClasses {
+      classNames[i] = class.Name
+    }
+    avatar.Class = askFromList(0, 11, fmt.Sprintf("Choose a class for your character (current is '%s'):", avatar.Class), classNames)
     showEditAvatarScreen(avatar)
 
   // "q" and "" (Esc) returns
@@ -125,9 +128,9 @@ func askFromList(x int, y int, title string, list []string) string {
   return ""
 }
 
-func showMeleeScreen(playerAvatar combatAvatar, ennemyAvatar combatAvatar) {
+func showMeleeScreen(playerAvatar CombatAvatar, ennemyAvatar CombatAvatar) {
   currentTerminal.Clear()
-  currentTerminal.TextAt(0, 0, fmt.Sprintf("Melee: %s vs %s\n", playerAvatar.name, ennemyAvatar.name))
+  currentTerminal.TextAt(0, 0, fmt.Sprintf("Melee: %s vs %s\n", playerAvatar.Name, ennemyAvatar.Name))
 
   showCombatAvatar(0, 2, playerAvatar)
   showCombatAvatar(20, 2, ennemyAvatar)
@@ -154,14 +157,14 @@ func showMeleeScreen(playerAvatar combatAvatar, ennemyAvatar combatAvatar) {
   }
 
   if ennemyAvatar.hp <= 0 {
-    showEndScreen(fmt.Sprintf("%s is slain...", ennemyAvatar.name))
+    showEndScreen(fmt.Sprintf("%s is slain...", ennemyAvatar.Name))
     return
   } else {
     playerAvatar.hp = playerAvatar.hp - (rollDice(ennemyAvatar.damageRange) + ennemyAvatar.damageBonus)
   }
 
   if playerAvatar.hp <= 0 {
-    showEndScreen(fmt.Sprintf("%s is slain...", playerAvatar.name))
+    showEndScreen(fmt.Sprintf("%s is slain...", playerAvatar.Name))
     return
   }
 
@@ -169,8 +172,8 @@ func showMeleeScreen(playerAvatar combatAvatar, ennemyAvatar combatAvatar) {
 
 }
 
-func showCombatAvatar(x int, y int, combatAvatar combatAvatar) {
-  currentTerminal.TextAt(x, y, combatAvatar.name)
+func showCombatAvatar(x int, y int, combatAvatar CombatAvatar) {
+  currentTerminal.TextAt(x, y, combatAvatar.Name)
   currentTerminal.TextAt(x, y + 1, fmt.Sprintf("HP: %d", combatAvatar.hp))
   currentTerminal.TextAt(x, y + 2, fmt.Sprintf("AC: %d", combatAvatar.ac))
   currentTerminal.TextAt(x, y + 3, fmt.Sprintf("To Hit: %d", combatAvatar.tohit))
