@@ -207,13 +207,10 @@ func fightScreen(avatar *Avatar) {
       ennemyAvatar.Life = ennemyAvatar.Life - RandInt(playerAvatar.DamageMin, playerAvatar.DamageMax)
     case "w":
       // Wait
-    case "r":
-      // Retreat
+    default:
+      // Retreat / Quit
       showEndScreen(fmt.Sprintf("%s has retreated safely...", playerAvatar.Name))
-      return
-    case "":
-      // Quit
-      return
+      break loop
     }
 
     if ennemyAvatar.Life <= 0 {
