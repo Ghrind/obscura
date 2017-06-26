@@ -209,7 +209,7 @@ func fightScreen(avatar *Avatar) {
       // Wait
     case "r":
       // Retreat
-      showEndScreen(fmt.Sprintf("%s has retreated safely..."))
+      showEndScreen(fmt.Sprintf("%s has retreated safely...", playerAvatar.Name))
       return
     case "":
       // Quit
