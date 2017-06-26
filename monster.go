@@ -2,10 +2,15 @@ package main
 
 type Monster struct {
   Name string
-  Hp int
-  Ac int
-  DamageRange int
-  DamageBonus int
-  Tohit int
+
+  // Combat avatar
+  Life int
+  Dodge int
+  Armor int
+  DamageMin int
+  DamageMax int
+  AttackRating int
+
+  // Other
   LootMoney int
 }

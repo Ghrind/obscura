@@ -4,7 +4,7 @@ var mod Mod
 
 func main() {
   InitMod()
-  initRandomSeed()
+  InitRandomSeed()
   InitSavegame(new(TempFileSavegame))
 
   initUI(new(TermboxTerminal))

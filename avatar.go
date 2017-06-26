@@ -7,18 +7,19 @@ type Avatar struct {
   Dex int
   Con int
   Int int
-  Wis int
-  Cha int
+  Wil int
+  Pre int
   Items []Item
 }
 
 type CombatAvatar struct {
   Name string
-  Hp int
-  Ac int
-  DamageRange int
-  DamageBonus int
-  Tohit int
+  Life int
+  Dodge int
+  DamageMin int
+  DamageMax int
+  AttackRating int
+  Armor int
 }
 
 type AvatarClass struct {
@@ -26,12 +27,12 @@ type AvatarClass struct {
 }
 
 func rollAvatar(avatar *Avatar) {
-  avatar.Str = rollD6() + rollD6() + 6
-  avatar.Dex = rollD6() + rollD6() + 6
-  avatar.Con = rollD6() + rollD6() + 6
-  avatar.Int = rollD6() + rollD6() + 6
-  avatar.Wis = rollD6() + rollD6() + 6
-  avatar.Cha = rollD6() + rollD6() + 6
+  avatar.Str = RandInt(1, 6) + RandInt(1, 6) + 6
+  avatar.Dex = RandInt(1, 6) + RandInt(1, 6) + 6
+  avatar.Con = RandInt(1, 6) + RandInt(1, 6) + 6
+  avatar.Int = RandInt(1, 6) + RandInt(1, 6) + 6
+  avatar.Wil = RandInt(1, 6) + RandInt(1, 6) + 6
+  avatar.Pre = RandInt(1, 6) + RandInt(1, 6) + 6
 }
 
 func modFromStat(stat int) int {
@@ -45,11 +46,11 @@ func modFromStat(stat int) int {
 func CombatAvatarFromAvatar(avatar Avatar) CombatAvatar {
   combatAvatar := CombatAvatar{}
   combatAvatar.Name = avatar.Name
-  combatAvatar.Ac = modFromStat(avatar.Dex) + 10
-  combatAvatar.DamageRange = 6
-  combatAvatar.DamageBonus = modFromStat(avatar.Str)
-  combatAvatar.Hp = 8 + modFromStat(avatar.Con)
-  combatAvatar.Tohit = modFromStat(avatar.Str) + 1
+  combatAvatar.Dodge = modFromStat(avatar.Dex) + 10
+  combatAvatar.DamageMin = 1 + modFromStat(avatar.Str)
+  combatAvatar.DamageMax = 2 + modFromStat(avatar.Str)
+  combatAvatar.Life = 6 + modFromStat(avatar.Con)
+  combatAvatar.AttackRating = modFromStat(avatar.Str)
 
   return combatAvatar
 }
@@ -57,11 +58,11 @@ func CombatAvatarFromAvatar(avatar Avatar) CombatAvatar {
 func CombatAvatarFromMonster(monster Monster) CombatAvatar {
   combatAvatar := CombatAvatar{}
   combatAvatar.Name = monster.Name
-  combatAvatar.Ac = monster.Ac
-  combatAvatar.DamageRange = monster.DamageRange
-  combatAvatar.DamageBonus = monster.DamageBonus
-  combatAvatar.Hp = monster.Hp
-  combatAvatar.Tohit = monster.Tohit
+  combatAvatar.Life = monster.Life
+  combatAvatar.DamageMin = monster.DamageMin
+  combatAvatar.DamageMax = monster.DamageMax
+  combatAvatar.Life = monster.Life
+  combatAvatar.AttackRating = monster.AttackRating
 
   return combatAvatar
 }

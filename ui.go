@@ -57,8 +57,8 @@ func ShowAvatarScreen(avatar *Avatar) {
     currentTerminal.TextAt(0, 3, fmt.Sprintf("DEX: %d", avatar.Dex))
     currentTerminal.TextAt(0, 4, fmt.Sprintf("CON: %d", avatar.Con))
     currentTerminal.TextAt(0, 5, fmt.Sprintf("INT: %d", avatar.Int))
-    currentTerminal.TextAt(0, 6, fmt.Sprintf("WIS: %d", avatar.Wis))
-    currentTerminal.TextAt(0, 7, fmt.Sprintf("CHA: %d", avatar.Cha))
+    currentTerminal.TextAt(0, 6, fmt.Sprintf("WIL: %d", avatar.Wil))
+    currentTerminal.TextAt(0, 7, fmt.Sprintf("PRE: %d", avatar.Pre))
 
     currentTerminal.TextAt(0, 9, fmt.Sprintf("Loot (%d):", len(avatar.Items)))
     offset := displayItemsList(0, 10, avatar.Items, 10)
@@ -90,8 +90,8 @@ func editAvatarScreen(avatar *Avatar) {
     currentTerminal.TextAt(0, 3, fmt.Sprintf("DEX: %d", avatar.Dex))
     currentTerminal.TextAt(0, 4, fmt.Sprintf("CON: %d", avatar.Con))
     currentTerminal.TextAt(0, 5, fmt.Sprintf("INT: %d", avatar.Int))
-    currentTerminal.TextAt(0, 6, fmt.Sprintf("WIS: %d", avatar.Wis))
-    currentTerminal.TextAt(0, 7, fmt.Sprintf("CHA: %d", avatar.Cha))
+    currentTerminal.TextAt(0, 6, fmt.Sprintf("WIL: %d", avatar.Wil))
+    currentTerminal.TextAt(0, 7, fmt.Sprintf("PRE: %d", avatar.Pre))
 
     currentTerminal.Flush()
 
@@ -199,12 +199,12 @@ func fightScreen(avatar *Avatar) {
     currentTerminal.Flush()
 
     prompt := "(a)ttack, (r)etreat, (w)ait?"
-    input := askAction(0, 8, prompt, []string{"a", "r", "w"})
+    input := askAction(0, 9, prompt, []string{"a", "r", "w"})
 
     switch(input) {
     case "a":
       // Attack
-      ennemyAvatar.Hp = ennemyAvatar.Hp - (rollDice(playerAvatar.DamageRange) + playerAvatar.DamageBonus)
+      ennemyAvatar.Life = ennemyAvatar.Life - RandInt(playerAvatar.DamageMin, playerAvatar.DamageMax)
     case "w":
       // Wait
     case "r":
@@ -216,23 +216,23 @@ func fightScreen(avatar *Avatar) {
       return
     }
 
-    if ennemyAvatar.Hp <= 0 {
+    if ennemyAvatar.Life <= 0 {
       items := PickItems(ennemy.LootMoney)
       avatar.Items = append(avatar.Items, items...)
       SavegameInterface.Save(*avatar)
 
-      currentTerminal.TextAt(0, 10, fmt.Sprintf("%s is slain...", ennemyAvatar.Name))
-      currentTerminal.TextAt(0, 12, "The spoils of battle:")
-      displayItemsList(0, 13, items, 20)
+      currentTerminal.TextAt(0, 11, fmt.Sprintf("%s is slain...", ennemyAvatar.Name))
+      currentTerminal.TextAt(0, 13, "The spoils of battle:")
+      displayItemsList(0, 14, items, 20)
       currentTerminal.Flush()
 
       _, _ = currentTerminal.WaitKeyPress()
       break loop
     } else {
-      playerAvatar.Hp = playerAvatar.Hp - (rollDice(ennemyAvatar.DamageRange) + ennemyAvatar.DamageBonus)
+      playerAvatar.Life = playerAvatar.Life - RandInt(ennemyAvatar.DamageMin, ennemyAvatar.DamageMax)
     }
 
-    if playerAvatar.Hp <= 0 {
+    if playerAvatar.Life <= 0 {
       showEndScreen(fmt.Sprintf("%s is slain...", playerAvatar.Name))
       break loop
     }
@@ -241,10 +241,11 @@ func fightScreen(avatar *Avatar) {
 
 func displayCombatAvatar(x int, y int, combatAvatar CombatAvatar) {
   currentTerminal.TextAt(x, y, combatAvatar.Name)
-  currentTerminal.TextAt(x, y + 1, fmt.Sprintf("HP: %d", combatAvatar.Hp))
-  currentTerminal.TextAt(x, y + 2, fmt.Sprintf("AC: %d", combatAvatar.Ac))
-  currentTerminal.TextAt(x, y + 3, fmt.Sprintf("To Hit: %d", combatAvatar.Tohit))
-  currentTerminal.TextAt(x, y + 4, fmt.Sprintf("Damage: 1D%d+%d", combatAvatar.DamageRange, combatAvatar.DamageBonus))
+  currentTerminal.TextAt(x, y + 1, fmt.Sprintf("Life: %d", combatAvatar.Life))
+  currentTerminal.TextAt(x, y + 2, fmt.Sprintf("Dodge: %d", combatAvatar.Dodge))
+  currentTerminal.TextAt(x, y + 3, fmt.Sprintf("Armor: %d", combatAvatar.Armor))
+  currentTerminal.TextAt(x, y + 4, fmt.Sprintf("Attack Rating: %d", combatAvatar.AttackRating))
+  currentTerminal.TextAt(x, y + 5, fmt.Sprintf("Damage: %d-%d", combatAvatar.DamageMin, combatAvatar.DamageMax))
 }
 
 func showEndScreen(message string) {

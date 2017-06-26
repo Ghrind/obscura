@@ -3,16 +3,8 @@ package main
 import "time"
 import "math/rand"
 
-func rollDice(sides int) int {
-  return rand.Intn(sides) + 1
-}
-
-func rollD6() int {
-  return rollDice(6)
-}
-
-func rollD20() int {
-  return rollDice(20)
+func RandInt(min int, max int) int {
+  return rand.Intn(max - min + 1) + min
 }
 
 func randIndex(sliceLen int) int {
@@ -23,6 +15,6 @@ func randIndex(sliceLen int) int {
   return rand.Intn(sliceLen)
 }
 
-func initRandomSeed() {
+func InitRandomSeed() {
   rand.Seed(time.Now().UTC().UnixNano())
 }
