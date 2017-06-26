@@ -25,7 +25,7 @@ func initUI(terminal Terminal) {
 
 func quitUI() {
   currentTerminal.Close()
-  currentTerminal.ExitMessage("Thanks for playing Crawler!")
+  currentTerminal.ExitMessage("Thanks for playing Obscura!")
 }
 
 // Return the total number of rows used
