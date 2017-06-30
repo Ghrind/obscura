@@ -7,7 +7,7 @@ func main() {
   InitRandomSeed()
   InitSavegame(new(TempFileSavegame))
 
-  initUI(new(TermboxTerminal))
+  initUI(new(TermuiTerminal))
   defer quitUI()
 
   player, err := SavegameInterface.Load()

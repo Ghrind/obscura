@@ -1,6 +1,6 @@
 package main
 
-import "github.com/nsf/termbox-go"
+import "github.com/Ghrind/termui"
 import "fmt"
 import "errors"
 
@@ -14,56 +14,62 @@ type Terminal interface {
   ExitMessage(message string)
 }
 
-// Termbox implementation
+// Termui implementation
 
-type TermboxTerminal struct {
-  proxy func() termbox.Event
+type TermuiTerminal struct {
 }
 
-func (tb *TermboxTerminal) Init() {
-  err := termbox.Init()
+func (tb *TermuiTerminal) Init() {
+  err := termui.Init()
   if err != nil {
     panic(err)
   }
-
-  termbox.SetInputMode(termbox.InputEsc)
-
-  tb.proxy = termbox.PollEvent
 }
 
-func (tb TermboxTerminal) Close() {
-  termbox.Close()
+func (tb TermuiTerminal) Close() {
+  termui.Close()
 }
-func (tb TermboxTerminal) Flush() {
-  termbox.Flush()
-}
-
-func (tb TermboxTerminal) Clear() {
-  termbox.Clear(termbox.ColorDefault, termbox.ColorDefault)
-  termbox.HideCursor()
+func (tb TermuiTerminal) Flush() {
+  //termui.Flush()
 }
 
-func (tb TermboxTerminal) ExitMessage(message string) {
+func (tb TermuiTerminal) Clear() {
+  termui.Clear()
+}
+
+func (tb TermuiTerminal) ExitMessage(message string) {
   fmt.Println(message)
 }
 
-func (tb TermboxTerminal) TextAt(x int, y int, text string) {
-  tbprint(x, y, termbox.ColorDefault, termbox.ColorDefault, text)
+func (tb TermuiTerminal) TextAt(x int, y int, text string) {
+  p := termui.NewPar(text)
+  p.Width = len(text)
+  p.Height = 1
+  p.Border = false
+  p.X = x
+  p.Y = y
+
+  termui.Render(p)
 }
 
-func (tb TermboxTerminal) WaitKeyPress() (string, error) {
-  ev := tb.proxy()
-  switch ev.Type {
-  case termbox.EventKey:
-    if ev.Key == termbox.KeyEsc {
-      return "", errors.New("Escape pressed")
-    }
+func (tb TermuiTerminal) WaitKeyPress() (string, error) {
+  var key string
+  var err error
 
-  case termbox.EventError:
-    panic(ev.Err)
-  }
+  termui.Handle("/sys/kbd/<escape>", func(e termui.Event) {
+    key = ""
+    err = errors.New("Escape pressed")
+    termui.StopLoop()
+  })
 
-  return string(ev.Ch), nil
+  termui.Handle("/sys/kbd", func(e termui.Event) {
+    key = e.Data.(termui.EvtKbd).KeyStr
+    err = nil
+    termui.StopLoop()
+  })
+
+  termui.Loop()
+  return key, err
 }
 
 // Implementation for automated tests purpose
